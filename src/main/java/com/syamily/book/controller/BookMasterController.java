@@ -57,41 +57,6 @@ public class BookMasterController {
 	}
 	
 
-//	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-//	public ResponseEntity<String> uploadImage(
-//	        @RequestParam("imageFile") MultipartFile imageFile,
-//	        @RequestParam("imageName") String imageName) {
-//
-//	    // Validate if the file is not empty
-//	    if (imageFile.isEmpty()) {
-//	        return ResponseEntity.badRequest().body("No file uploaded");
-//	    }
-//
-//	    try {
-//	        String contentType = imageFile.getContentType();
-//	        if (contentType == null || !contentType.startsWith("image/")) {
-//	            return ResponseEntity.badRequest().body("Unsupported file type. Only image files are allowed.");
-//	        }
-//
-//	        String originalFilename = imageFile.getOriginalFilename();
-//	        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
-//	        if (!List.of("png", "jpg", "jpeg").contains(fileExtension)) {
-//	            return ResponseEntity.badRequest().body("Unsupported file type. Only PNG, JPG, and JPEG are allowed.");
-//	        }
-//
-//	        String uploadDir = "src/main/resources/static/images/"; 
-//	        Path path = Paths.get(uploadDir + originalFilename);
-//
-//	        Files.createDirectories(path.getParent());
-//
-//	        Files.write(path, imageFile.getBytes());
-//
-//	        return ResponseEntity.ok("/images/" + originalFilename);
-//	    } catch (IOException e) {
-//	        // Handle errors during file processing
-//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
-//	    }
-//	}
 	
 	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> uploadImage(
@@ -124,25 +89,24 @@ public class BookMasterController {
 	            return ResponseEntity.badRequest().body("Unsupported file type. Only PNG, JPG, and JPEG are allowed.");
 	        }
 
-	        // Define upload directory and log it
-	        String uploadDir = "src/main/resources/static/images/";
-	        System.out.println("DEBUG: Upload directory: " + uploadDir);
-
-	        // Save file
-	        Path path = Paths.get(uploadDir + originalFilename);
-	        Files.createDirectories(path.getParent()); // Ensure directory exists
+	        // Define upload directory
+	        String uploadDir = System.getProperty("user.dir") + "/uploads/images/";
+	        Files.createDirectories(Paths.get(uploadDir)); // Ensure directory exists
+	        Path path = Paths.get(uploadDir + imageName);
 	        System.out.println("DEBUG: Saving file to: " + path.toAbsolutePath());
 
+	        // Save file
 	        Files.write(path, imageFile.getBytes());
 	        System.out.println("DEBUG: File saved successfully at: " + path.toAbsolutePath());
 
-	        // Return response
-	        return ResponseEntity.ok("/images/" + originalFilename);
+	        // Return public URL of the uploaded image
+	        return ResponseEntity.ok("https://springboot-render-73ug.onrender.com/images/" + imageName);
 	    } catch (IOException e) {
 	        System.out.println("DEBUG: Error saving file: " + e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
 	    }
 	}
+
 
 
 	 

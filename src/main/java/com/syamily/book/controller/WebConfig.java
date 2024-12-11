@@ -11,6 +11,9 @@ public class WebConfig implements WebMvcConfigurer {
 	
 	@Value("${frontend_url}")
 	private String frondendurl;
+	
+	@Value("${image.upload-dir}")
+    private String uploadDir;
 
     @Override
     public void addCorsMappings(CorsRegistry registry) {
@@ -23,8 +26,11 @@ public class WebConfig implements WebMvcConfigurer {
     }
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
+        String uploadDir = System.getenv("IMAGE_UPLOAD_DIR"); 
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:" + System.getProperty("user.dir") + "/uploads/images/");
+                .addResourceLocations("file:" + uploadDir + "/");
     }
+
+
 
 }

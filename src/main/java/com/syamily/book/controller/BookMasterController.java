@@ -105,7 +105,7 @@ public class BookMasterController {
 	     // Log the final URL of the uploaded image
 	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName;
 	        System.out.println("DEBUG: Image URL: " + imageUrl);  // Log the final URL
-	        System.out.println("File saved to: " + uploadDir + "/uploads/leaf.png");
+	        System.out.println("File saved to: " + uploadDir + "/" + fullImageName);
 	        System.out.println("Image directory: " + uploadDir);
 	        System.out.println("Absolute file path: " + new File(uploadDir).getAbsolutePath());
 

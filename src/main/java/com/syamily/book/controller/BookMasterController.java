@@ -102,6 +102,9 @@ public class BookMasterController {
 	        // Save file
 	        Files.write(path, imageFile.getBytes());
 	        System.out.println("DEBUG: File saved successfully at: " + path.toAbsolutePath());
+	     // Log the final URL of the uploaded image
+	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName;
+	        System.out.println("DEBUG: Image URL: " + imageUrl);  // Log the final URL
 
 	        // Return public URL of the uploaded image
 	        return ResponseEntity.ok("https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName);

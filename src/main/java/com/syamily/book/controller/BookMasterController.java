@@ -1,12 +1,12 @@
 package com.syamily.book.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.List;
 
-import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -105,6 +105,9 @@ public class BookMasterController {
 	     // Log the final URL of the uploaded image
 	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName;
 	        System.out.println("DEBUG: Image URL: " + imageUrl);  // Log the final URL
+	        System.out.println("File saved to: " + uploadDir + "/uploads/leaf.png");
+	        System.out.println("Image directory: " + uploadDir);
+	        System.out.println("Absolute file path: " + new File(uploadDir).getAbsolutePath());
 
 	        // Return public URL of the uploaded image
 	        return ResponseEntity.ok("https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName);

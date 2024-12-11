@@ -49,41 +49,50 @@ public class BookMasterController {
 	        }
 
 	    } catch (IllegalArgumentException ex) {
-	        return ResponseEntity.badRequest().body(ex.getMessage()); // Return validation error message
+	        return ResponseEntity.badRequest().body(ex.getMessage()); 
 	    }
 
 	    String bookId = bookMasterService.saveBookDetails(bookMasterDTO);
 	    return ResponseEntity.status(HttpStatus.CREATED).body("Book saved with ID: " + bookId);
 	}
 	
+
 //	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 //	public ResponseEntity<String> uploadImage(
 //	        @RequestParam("imageFile") MultipartFile imageFile,
 //	        @RequestParam("imageName") String imageName) {
 //
-//	    // Process and save the file
+//	    // Validate if the file is not empty
 //	    if (imageFile.isEmpty()) {
 //	        return ResponseEntity.badRequest().body("No file uploaded");
 //	    }
 //
 //	    try {
-//	        // Set the directory inside the 'static/images' folder (relative to the project root)
-//	        String uploadDir = "src/main/resources/static/images/";  // This is relative to the root of your project
-//	        Path path = Paths.get(uploadDir + imageFile.getOriginalFilename());
+//	        String contentType = imageFile.getContentType();
+//	        if (contentType == null || !contentType.startsWith("image/")) {
+//	            return ResponseEntity.badRequest().body("Unsupported file type. Only image files are allowed.");
+//	        }
 //
-//	        // Create necessary directories if they don't exist
+//	        String originalFilename = imageFile.getOriginalFilename();
+//	        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+//	        if (!List.of("png", "jpg", "jpeg").contains(fileExtension)) {
+//	            return ResponseEntity.badRequest().body("Unsupported file type. Only PNG, JPG, and JPEG are allowed.");
+//	        }
+//
+//	        String uploadDir = "src/main/resources/static/images/"; 
+//	        Path path = Paths.get(uploadDir + originalFilename);
+//
 //	        Files.createDirectories(path.getParent());
 //
-//	        // Save the file to the specified directory
 //	        Files.write(path, imageFile.getBytes());
 //
-//	        // Return the relative path to be used in the frontend
-//	        return ResponseEntity.ok("/images/" + imageFile.getOriginalFilename());  // Return the relative path to the frontend
+//	        return ResponseEntity.ok("/images/" + originalFilename);
 //	    } catch (IOException e) {
+//	        // Handle errors during file processing
 //	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
 //	    }
 //	}
-//
+	
 	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> uploadImage(
 	        @RequestParam("imageFile") MultipartFile imageFile,
@@ -91,34 +100,50 @@ public class BookMasterController {
 
 	    // Validate if the file is not empty
 	    if (imageFile.isEmpty()) {
+	        System.out.println("DEBUG: No file uploaded.");
 	        return ResponseEntity.badRequest().body("No file uploaded");
 	    }
 
 	    try {
+	        // Log original filename and content type
+	        String originalFilename = imageFile.getOriginalFilename();
+	        System.out.println("DEBUG: Received file - Name: " + originalFilename + ", Content-Type: " + imageFile.getContentType());
+
+	        // Validate content type
 	        String contentType = imageFile.getContentType();
 	        if (contentType == null || !contentType.startsWith("image/")) {
+	            System.out.println("DEBUG: Unsupported content type: " + contentType);
 	            return ResponseEntity.badRequest().body("Unsupported file type. Only image files are allowed.");
 	        }
 
-	        String originalFilename = imageFile.getOriginalFilename();
+	        // Validate file extension
 	        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+	        System.out.println("DEBUG: File extension: " + fileExtension);
 	        if (!List.of("png", "jpg", "jpeg").contains(fileExtension)) {
+	            System.out.println("DEBUG: Unsupported file extension: " + fileExtension);
 	            return ResponseEntity.badRequest().body("Unsupported file type. Only PNG, JPG, and JPEG are allowed.");
 	        }
 
-	        String uploadDir = "src/main/resources/static/images/"; 
-	        Path path = Paths.get(uploadDir + originalFilename);
+	        // Define upload directory and log it
+	        String uploadDir = "src/main/resources/static/images/";
+	        System.out.println("DEBUG: Upload directory: " + uploadDir);
 
-	        Files.createDirectories(path.getParent());
+	        // Save file
+	        Path path = Paths.get(uploadDir + originalFilename);
+	        Files.createDirectories(path.getParent()); // Ensure directory exists
+	        System.out.println("DEBUG: Saving file to: " + path.toAbsolutePath());
 
 	        Files.write(path, imageFile.getBytes());
+	        System.out.println("DEBUG: File saved successfully at: " + path.toAbsolutePath());
 
+	        // Return response
 	        return ResponseEntity.ok("/images/" + originalFilename);
 	    } catch (IOException e) {
-	        // Handle errors during file processing
+	        System.out.println("DEBUG: Error saving file: " + e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
 	    }
 	}
+
 
 	 
 	@DeleteMapping("/delete/{bookId}")

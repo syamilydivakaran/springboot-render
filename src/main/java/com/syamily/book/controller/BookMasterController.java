@@ -1,6 +1,5 @@
 package com.syamily.book.controller;
 
-import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -57,6 +56,66 @@ public class BookMasterController {
 	}
 	
 
+//	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+//	public ResponseEntity<String> uploadImage(
+//	        @RequestParam("imageFile") MultipartFile imageFile,
+//	        @RequestParam("imageName") String imageName) {
+//
+//	    // Validate if the file is not empty
+//	    if (imageFile.isEmpty()) {
+//	        System.out.println("DEBUG: No file uploaded.");
+//	        return ResponseEntity.badRequest().body("No file uploaded");
+//	    }
+//
+//	    try {
+//	        // Log original filename and content type
+//	        String originalFilename = imageFile.getOriginalFilename();
+//	        System.out.println("DEBUG: Received file - Name: " + originalFilename + ", Content-Type: " + imageFile.getContentType());
+//
+//	        // Validate content type
+//	        String contentType = imageFile.getContentType();
+//	        if (contentType == null || !contentType.startsWith("image/")) {
+//	            System.out.println("DEBUG: Unsupported content type: " + contentType);
+//	            return ResponseEntity.badRequest().body("Unsupported file type. Only image files are allowed.");
+//	        }
+//
+//	        // Validate file extension
+//	        String fileExtension = originalFilename.substring(originalFilename.lastIndexOf(".") + 1).toLowerCase();
+//	        System.out.println("DEBUG: File extension: " + fileExtension);
+//	        if (!List.of("png", "jpg", "jpeg").contains(fileExtension)) {
+//	            System.out.println("DEBUG: Unsupported file extension: " + fileExtension);
+//	            return ResponseEntity.badRequest().body("Unsupported file type. Only PNG, JPG, and JPEG are allowed.");
+//	        }
+//
+//	        // Define the local upload directory
+//	        String uploadDir = System.getProperty("user.dir") + "/bookmanagement/images/uploads/";  // Set the path to /bookmanagement/images/uploads/
+//
+//	        // Ensure the upload directory exists
+//	        Files.createDirectories(Paths.get(uploadDir));
+//
+//	        // Append the file extension to the image name
+//	        String fullImageName = imageName + "." + fileExtension; // E.g., "flower.png"
+//	        Path path = Paths.get(uploadDir + "/" + fullImageName);
+//	        System.out.println("DEBUG: Saving file to: " + path.toAbsolutePath());
+//
+//	        // Save file
+//	        Files.write(path, imageFile.getBytes());
+//	        System.out.println("DEBUG: File saved successfully at: " + path.toAbsolutePath());
+//	     // Log the final URL of the uploaded image
+//	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName;
+//	        System.out.println("DEBUG: Image URL: " + imageUrl);  // Log the final URL
+//	        System.out.println("File saved to: " + uploadDir + "/" + fullImageName);
+//	        System.out.println("Image directory: " + uploadDir);
+//	        System.out.println("Absolute file path: " + new File(uploadDir).getAbsolutePath());
+//
+//	        // Return public URL of the uploaded image
+//	        return ResponseEntity.ok("https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName);
+//	    } catch (IOException e) {
+//	        System.out.println("DEBUG: Error saving file: " + e.getMessage());
+//	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
+//	    }
+//	}
+
 	@PostMapping(value = "/image", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	public ResponseEntity<String> uploadImage(
 	        @RequestParam("imageFile") MultipartFile imageFile,
@@ -89,10 +148,12 @@ public class BookMasterController {
 	        }
 
 	        // Define the local upload directory
-	        String uploadDir = System.getProperty("user.dir") + "/bookmanagement/images/uploads/";  // Set the path to /bookmanagement/images/uploads/
+	        String uploadDir = System.getProperty("user.dir") + "/public/images";
+	        System.out.println("DEBUG: Upload directory set to: " + uploadDir);
 
 	        // Ensure the upload directory exists
 	        Files.createDirectories(Paths.get(uploadDir));
+	        System.out.println("DEBUG: Upload directory verified or created.");
 
 	        // Append the file extension to the image name
 	        String fullImageName = imageName + "." + fileExtension; // E.g., "flower.png"
@@ -102,21 +163,18 @@ public class BookMasterController {
 	        // Save file
 	        Files.write(path, imageFile.getBytes());
 	        System.out.println("DEBUG: File saved successfully at: " + path.toAbsolutePath());
-	     // Log the final URL of the uploaded image
-	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName;
-	        System.out.println("DEBUG: Image URL: " + imageUrl);  // Log the final URL
-	        System.out.println("File saved to: " + uploadDir + "/" + fullImageName);
-	        System.out.println("Image directory: " + uploadDir);
-	        System.out.println("Absolute file path: " + new File(uploadDir).getAbsolutePath());
+
+	        // Log the final URL of the uploaded image
+	        String imageUrl = "https://springboot-render-73ug.onrender.com/images/" + fullImageName;
+	        System.out.println("DEBUG: Image URL: " + imageUrl);
 
 	        // Return public URL of the uploaded image
-	        return ResponseEntity.ok("https://springboot-render-73ug.onrender.com/images/uploads/" + fullImageName);
+	        return ResponseEntity.ok(imageUrl);
 	    } catch (IOException e) {
 	        System.out.println("DEBUG: Error saving file: " + e.getMessage());
 	        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error saving file: " + e.getMessage());
 	    }
 	}
-
 
 
 
